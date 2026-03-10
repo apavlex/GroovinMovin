@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-[10px] dark:bg-slate-800/80;
+  }
+}
