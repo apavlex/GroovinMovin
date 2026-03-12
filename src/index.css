@@ -1,9 +1,51 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
 
-@layer components {
-  .glass-card {
-    @apply bg-white/90 backdrop-blur-[10px] dark:bg-slate-800/80;
+@theme {
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #C62828;
+  --color-logo-blue: #0066CC;
+  --color-logo-yellow: #FFD700;
+  --color-background-light: #FFFFFF;
+  --color-background-dark: #0F172A;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  @keyframes fadeSlideUp {
+    0% { opacity: 0; transform: translateY(10px); }
+    20% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
   }
+
+  @keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(198, 40, 40, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
+  }
+
+  --animate-city: fadeSlideUp 3s infinite;
+  --animate-pulse-red: pulse-red 2s infinite;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-body bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.8);
 }

@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { SiFacebook, SiInstagram, SiYelp, SiYoutube } from "react-icons/si";
+import { motion, AnimatePresence } from "motion/react";
+import { MotionBackground } from "./components/MotionBackground";
 
 const cities = [
   "Vancouver",
@@ -6,12 +9,13 @@ const cities = [
   "La Center",
   "Camas",
   "Battle Ground",
-  "Salmon Creek",
 ];
 
 function App() {
   const [cityIndex, setCityIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,19 +28,29 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle("dark");
-  };
-
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+      <nav className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20 items-center">
+          <div className="flex justify-between h-16 lg:h-20 items-center">
             <div className="flex items-center gap-2">
-              <img src="/GroovinMovinLogo.png" alt="Groovin Movin Logo" className="h-20 w-auto" />
+              <img 
+                src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/GroovinMovinLogo.png" 
+                alt="Groovin Movin Logo" 
+                className="h-12 lg:h-20 w-auto" 
+                referrerPolicy="no-referrer"
+              />
             </div>
-            <div className="hidden md:flex items-center space-x-8">
+            
+            {/* Mobile Menu Button */}
+            <button 
+              className="lg:hidden p-2 text-slate-600 dark:text-slate-300"
+              onClick={() => setIsMenuOpen(true)}
+            >
+              <span className="material-icons text-3xl">menu</span>
+            </button>
+
+            <div className="hidden lg:flex items-center space-x-8">
               <a
                 className="text-sm font-semibold hover:text-primary transition-colors"
                 href="#services"
@@ -62,7 +76,7 @@ function App() {
                 FAQ
               </a>
               <a
-                className="flex items-center gap-2 px-6 py-3 rounded-full font-extrabold hover:bg-yellow-300 transition-all shadow-xl text-lg bg-primary text-white shadow-primary/20"
+                className="flex items-center gap-2 px-6 py-3 rounded-full font-extrabold hover:bg-white hover:text-black transition-all shadow-xl text-lg bg-primary text-white shadow-primary/20"
                 href="tel:3604876564"
               >
                 <span className="material-icons">call</span>Call Now: (360)
@@ -71,26 +85,77 @@ function App() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-0 bg-white dark:bg-slate-900 z-[100] lg:hidden p-8 flex flex-col overflow-y-auto"
+            >
+              <div className="flex justify-between items-center mb-12">
+                <img 
+                  src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/GroovinMovinLogo.png" 
+                  alt="Groovin Movin Logo" 
+                  className="h-10 w-auto" 
+                />
+                <button 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 text-slate-900 dark:text-white"
+                >
+                  <span className="material-icons text-4xl">close</span>
+                </button>
+              </div>
+              <div className="my-auto flex flex-col space-y-12">
+                <div className="flex flex-col space-y-8 text-center text-3xl font-bold text-slate-900 dark:text-white">
+                  <a href="#services" onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors">Services</a>
+                  <a href="#about" onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors">About</a>
+                  <a href="#reviews" onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors">Reviews</a>
+                  <a href="#faq" onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors">FAQ</a>
+                  <a 
+                    href="#quote-form" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="bg-primary text-white py-5 rounded-2xl text-center shadow-xl shadow-primary/30 mt-4 hover:bg-white hover:text-black transition-all"
+                  >
+                    Get a Quote
+                  </a>
+                </div>
+                <div className="pt-4 sm:pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
+                  <p className="text-xs sm:text-sm text-slate-500 mb-1 sm:mb-2 uppercase tracking-widest font-bold">Call us any day 8am-10pm</p>
+                  <a href="tel:3604876564" className="flex items-center justify-center gap-2 sm:gap-3 text-primary font-black text-xl sm:text-2xl">
+                    <span className="material-icons text-lg sm:text-2xl">call</span>
+                    (360) 487-6564
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
       <section className="relative min-h-[90vh] flex items-center pt-10 pb-20 overflow-hidden">
+        <MotionBackground />
         <div className="absolute inset-0 z-0">
           <img
             alt="Modern Home"
             className="w-full h-full object-cover opacity-10 dark:opacity-5"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNmhjQnFW6NZgw2r7ZWEV2PeAK_2hgOLWHisLYO47Mx2AcvpgKACJJ76eDLeZcBXH4izDAX1fGNp-JXSa4s8-1I42DkIKj49-Oj-kEuy5prE7rv5E8nr14_LLxVseT_aIBaCQfhtg6wTEC68W7YKoc3wnBHXEfJgyID4wgJ47ZGV4Cxd7SdbPsJ5bk5-a5kIbza2OsgNbFj32JOieZEZmx3ognS-Erzv7v6ND3Ayb86TK5wwAO-Fa6Vo_urhsFY7KP8z2qpcpAD8Q"
+            referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-white via-white/80 to-transparent dark:from-slate-950 dark:via-slate-950/80"></div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-logo-blue/10 text-logo-blue font-bold text-sm uppercase tracking-widest">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-logo-blue opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-logo-blue"></span>
                 </span>
                 <span className={`transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"}`}>
-                  Serving {cities[cityIndex]}, WA area!
+                  Serving {cities[cityIndex]} & surrounding areas
                 </span>
               </div>
               <h1 className="font-display text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white leading-[1.1]">
@@ -108,16 +173,19 @@ function App() {
                     alt="User 1"
                     className="inline-block h-12 w-12 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
                     src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80"
+                    referrerPolicy="no-referrer"
                   />
                   <img
                     alt="User 2"
                     className="inline-block h-12 w-12 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+                    referrerPolicy="no-referrer"
                   />
                   <img
                     alt="User 3"
                     className="inline-block h-12 w-12 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
                     src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80"
+                    referrerPolicy="no-referrer"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -139,7 +207,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+            <div id="quote-form" className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
               <h3 className="font-display text-2xl font-bold mb-6 text-slate-900 dark:text-white">
                 Get a Free Instant Quote
@@ -199,7 +267,7 @@ function App() {
                   ></textarea>
                 </div>
                 <button
-                  className="w-full text-white py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-xl transform hover:-translate-y-0.5 bg-black shadow-black/30 hover:bg-transparent hover:text-black hover:border-2 hover:border-black border-transparent"
+                  className="w-full text-white py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-black transition-all shadow-xl transform hover:-translate-y-0.5 bg-black shadow-black/30 border-transparent"
                   type="submit"
                 >
                   Get Free Quote Now
@@ -218,8 +286,9 @@ function App() {
           </div>
         </div>
       </section>
-      <section className="py-24 bg-slate-50 dark:bg-slate-900/50" id="services">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-24 bg-slate-50 dark:bg-slate-900/50 overflow-hidden" id="services">
+        <MotionBackground />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="font-display text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
               A Full-Service Solution
@@ -231,7 +300,7 @@ function App() {
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all group">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all">
+              <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all text-primary">
                 <span className="material-icons text-3xl">local_shipping</span>
               </div>
               <h3 className="text-2xl font-bold mb-4 dark:text-white">
@@ -263,7 +332,7 @@ function App() {
               </ul>
             </div>
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all group">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all text-blue-600">
+              <div className="w-16 h-16 bg-logo-blue/10 dark:bg-logo-blue/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all text-logo-blue">
                 <span className="material-icons text-3xl">
                   cleaning_services
                 </span>
@@ -297,7 +366,7 @@ function App() {
               </ul>
             </div>
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all group">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all text-green-600">
+              <div className="w-16 h-16 bg-logo-yellow/10 dark:bg-logo-yellow/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all text-logo-yellow">
                 <span className="material-icons text-3xl">delete_sweep</span>
               </div>
               <h3 className="text-2xl font-bold mb-4 dark:text-white">
@@ -331,28 +400,34 @@ function App() {
           </div>
         </div>
       </section>
-      <section className="py-24 bg-white dark:bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-24 bg-white dark:bg-slate-950 overflow-hidden">
+        <MotionBackground />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-100 dark:bg-slate-900 aspect-video">
-                <iframe
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                  frameBorder="0"
-                  src="https://www.youtube.com/embed/UMoBLZbB0-o"
-                  title="Groovin Movin Video"
-                ></iframe>
-                <div className="absolute bottom-6 left-6 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl flex items-center gap-4 z-10">
-                  <div className="bg-primary/10 p-3 rounded-xl">
-                    <span className="material-icons text-primary">groups</span>
+              <div 
+                className="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-100 dark:bg-slate-900 aspect-video cursor-pointer group"
+                onClick={() => setIsVideoModalOpen(true)}
+              >
+                <img 
+                  src="https://img.youtube.com/vi/UMoBLZbB0-o/maxresdefault.jpg" 
+                  alt="Video Thumbnail"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                  <div className="w-20 h-20 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform">
+                    <span className="material-icons text-5xl pl-1">play_arrow</span>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-xl hidden md:flex items-center gap-3 md:gap-4 z-10">
+                  <div className="bg-primary/10 p-2 md:p-3 rounded-xl">
+                    <span className="material-icons text-primary text-xl md:text-2xl">groups</span>
                   </div>
                   <div>
-                    <p className="text-3xl font-extrabold dark:text-white">
+                    <p className="text-xl md:text-3xl font-extrabold dark:text-white">
                       2,500+
                     </p>
-                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    <p className="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                       Successful Moves
                     </p>
                   </div>
@@ -362,7 +437,7 @@ function App() {
             </div>
             <div className="space-y-8">
               <div className="space-y-4">
-                <span className="text-primary font-bold tracking-widest uppercase text-sm">
+                <span className="text-logo-blue font-bold tracking-widest uppercase text-sm">
                   Our Difference
                 </span>
                 <h2 className="font-display text-4xl font-extrabold text-slate-900 dark:text-white leading-tight">
@@ -430,14 +505,15 @@ function App() {
         </div>
       </section>
       <section
-        className="py-24 bg-white dark:bg-slate-950"
+        className="relative py-24 bg-white dark:bg-slate-950 overflow-hidden"
         id="service-areas"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <MotionBackground />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 space-y-8">
               <div className="space-y-4">
-                <span className="text-primary font-bold tracking-widest uppercase text-sm">
+                <span className="text-logo-blue font-bold tracking-widest uppercase text-sm">
                   Coverage
                 </span>
                 <h2 className="font-display text-4xl font-extrabold text-slate-900 dark:text-white leading-tight">
@@ -482,7 +558,7 @@ function App() {
                   className="absolute inset-0 grayscale opacity-80 mix-blend-multiply dark:mix-blend-lighten"
                 ></iframe>
                 <a
-                  href="https://share.google/lZ1wiphfp7Duev0Ro"
+                  href="https://maps.app.goo.gl/MABxBZfmtbFmQywz5"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="absolute inset-0 z-10 flex text-center items-center justify-center bg-transparent group"
@@ -517,29 +593,34 @@ function App() {
             <img
               alt="Moving Truck"
               className="rounded-2xl h-64 w-full object-cover hover:scale-105 transition-transform duration-500"
-              src="/family.png"
+              src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/family.png"
+              referrerPolicy="no-referrer"
             />
             <img
               alt="Boxes"
               className="rounded-2xl h-64 w-full object-cover hover:scale-105 transition-transform duration-500"
-              src="/boxes.png"
+              src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/boxes.png"
+              referrerPolicy="no-referrer"
             />
             <img
               alt="Team Work"
               className="rounded-2xl h-64 w-full object-cover object-top hover:scale-105 transition-transform duration-500"
-              src="/piano.png"
+              src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/piano.png"
+              referrerPolicy="no-referrer"
             />
             <img
               alt="Cleaning"
               className="rounded-2xl h-64 w-full object-cover hover:scale-105 transition-transform duration-500"
-              src="/cleaning.png"
+              src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/cleaning.png"
+              referrerPolicy="no-referrer"
             />
           </div>
         </div>
       </section>
-      <section className="py-24 bg-white dark:bg-slate-950" id="reviews">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-primary font-bold tracking-widest uppercase text-xs">
+      <section className="relative py-24 bg-white dark:bg-slate-950 overflow-hidden" id="reviews">
+        <MotionBackground />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <span className="text-logo-blue font-bold tracking-widest uppercase text-sm">
             Testimonials
           </span>
           <h2 className="font-display text-4xl font-extrabold text-slate-900 dark:text-white mt-4 mb-16">
@@ -631,10 +712,11 @@ function App() {
           </div>
         </div>
       </section>
-      <section className="py-24 bg-slate-50 dark:bg-slate-900/50" id="faq">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-24 bg-slate-50 dark:bg-slate-900/50 overflow-hidden" id="faq">
+        <MotionBackground />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-xs">
+            <span className="text-logo-blue font-bold tracking-widest uppercase text-sm">
               FAQ
             </span>
             <h2 className="font-display text-4xl font-extrabold text-slate-900 dark:text-white mt-4 mb-4">
@@ -722,13 +804,13 @@ function App() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              className="bg-white text-primary px-10 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-all shadow-xl"
+              className="bg-white text-primary px-10 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-black transition-all shadow-xl"
               href="#"
             >
               Get Free Quote
             </a>
             <a
-              className="px-10 py-4 rounded-xl font-black text-xl hover:bg-yellow-300 transition-all shadow-2xl flex items-center justify-center gap-2 bg-black text-white"
+              className="px-10 py-4 rounded-xl font-black text-xl hover:bg-white hover:text-black transition-all shadow-2xl flex items-center justify-center gap-2 bg-logo-yellow text-black"
               href="tel:3604876564"
             >
               <span className="material-icons">call</span>(360) 487-6564
@@ -740,35 +822,32 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-12 mb-12 border-b border-slate-800 pb-12">
             <div className="col-span-1 md:col-span-2">
-              <img src="/GroovinMovinLogo.png" alt="Groovin Movin Logo" className="h-8 w-auto mb-6" />
+              <img 
+                src="https://raw.githubusercontent.com/apavlex/GroovinMovin/main/public/GroovinMovinLogo.png" 
+                alt="Groovin Movin Logo" 
+                className="h-8 w-auto mb-6" 
+                referrerPolicy="no-referrer"
+              />
               <p className="max-w-sm mb-6">
                 Your trusted local movers in Vancouver, WA and surrounding areas. Making every move
                 smooth and stress-free with our 3-in-1 service approach.
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-6">
                 <a className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300" href="https://www.facebook.com/541945605957657" target="_blank" rel="noopener noreferrer">
                   <span className="sr-only">Facebook</span>
-                  <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
-                  </svg>
+                  <SiFacebook size={24} />
                 </a>
                 <a className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300" href="https://www.instagram.com/groovinm" target="_blank" rel="noopener noreferrer">
                   <span className="sr-only">Instagram</span>
-                  <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16.362a4.2 4.2 0 110-8.4 4.2 4.2 0 010 8.4zM18.406 4.29a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"></path>
-                  </svg>
+                  <SiInstagram size={24} />
                 </a>
                 <a className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300" href="https://www.yelp.com/biz/groovin-movin-vancouver-3" target="_blank" rel="noopener noreferrer">
                   <span className="sr-only">Yelp</span>
-                  <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M12.9 8.243c.27-.478.7-.852 1.233-1.07.512-.208 1.052-.258 1.547-.14 1.93.456 3.65 1.758 4.7 3.513 1.06 1.774 1.258 3.824.568 5.642-.236.623-.74 1.028-1.396 1.127-.638.096-1.29-.115-1.782-.572L12.9 12.336l-3.376 4.148c-.464.57-1.072.868-1.722.846-.65-.02-1.242-.363-1.637-.954-1.428-2.14-1.69-4.88-.69-7.258C6.444 6.83 8.322 5.093 10.654 4.2c.62-.24 1.264-.225 1.77.037.492.257.785.698.818 1.25l.235 5.513-4.145-2.06c.005.002.568.283-.568-.283h1.137zm1.187 4.544l4.242 3.692c.28.243.344.407.382.525.04.126.046.287-.043.522-.533 1.398-1.714 2.453-3.137 2.808-1.41.352-2.88-.04-3.95-1.055-.178-.17-.282-.338-.302-.47-.02-.132.068-.314.3-.585l3.245-3.83c-.044.026.47-.294-.47.28l4.43 1.884c.004.004-.736-.217 1.472.434h-1.472l4.872 2.68c.25.138.384.226.467.318.082.09.117.18.09.308L18.42 22.1c-.027.126-.118.25-.26.335L14.088 12.787zm-2.022-1.46L11.83 5.815C11.815 5.617 11.666 5.39 11.417 5.26c-.255-.133-.523-.14-.736-.057C8.75 5.922 7.152 7.397 6.273 9.38c-.856 1.93-1.002 4.053-.418 6.047.062.208.183.396.353.535.163.136.37.19.57.172l5.287-2.766zM2.872 20.316l2.193-4.814L6.96 15.6c-.22.102-.375.14-.492.117-.116-.02-.236-.084-.37-.22-1.01-1.026-1.503-2.483-1.334-3.955.17-1.473.96-2.782 2.146-3.56.2-.132.37-.176.495-.143.125.034.256.126.386.29l2.844 3.655c.026-.046-.226.438.225-.44l-3.37-4.14C2.375 7.165 2.15 7.025 1.932 6.945L7.23 8.3c-.005.003-.314.772.63-1.545h-.63L2.873 11.1c-.137.256-.232.484-.27.675-.04.19-.015.353.076.54L.696 9.497c-.09.186-.107.41-.035.61l4.43-1.884z"></path>
-                  </svg>
+                  <SiYelp size={24} />
                 </a>
                 <a className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300" href="https://www.youtube.com/watch?v=UMoBLZbB0-o" target="_blank" rel="noopener noreferrer">
                   <span className="sr-only">YouTube</span>
-                  <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M21.582 6.186a2.68 2.68 0 00-1.884-1.897C17.934 3.84 12 3.84 12 3.84s-5.934 0-7.698.449a2.68 2.68 0 00-1.884 1.897C2 7.965 2 12 2 12s0 4.035.418 5.814a2.68 2.68 0 001.884 1.897C6.066 20.16 12 20.16 12 20.16s5.934 0 7.698-.449a2.68 2.68 0 001.884-1.897C22 16.035 22 12 22 12s0-4.035-.418-5.814zM9.99 15.582V8.417L15.935 12l-5.945 3.582z"></path>
-                  </svg>
+                  <SiYoutube size={24} />
                 </a>
               </div>
             </div>
@@ -830,6 +909,12 @@ function App() {
                     </span>
                   </a>
                 </li>
+                <li className="flex items-center gap-3">
+                  <span className="material-icons text-primary text-lg">
+                    schedule
+                  </span>
+                  <span>Any day 8am - 10pm</span>
+                </li>
                 <li className="flex items-start gap-3">
                   <span className="material-icons text-primary text-lg">
                     location_on
@@ -855,9 +940,9 @@ function App() {
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center text-xs">
-            <p>© 2024 Groovin Movin. All rights reserved.</p>
+            <p>© 2026 Groovin Movin. All rights reserved.</p>
             <p className="mt-4 md:mt-0">
-              Powered by <a href="https://adhello.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">adhello.ai</a>
+              Website Design & Powered by <a href="https://adhello.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">AdHello.ai</a>
             </p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <a className="hover:text-white" href="#">
@@ -871,22 +956,40 @@ function App() {
         </div>
       </footer>
       <a
-        className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl shadow-primary/40 md:hidden bg-black text-white"
+        className={`fixed bottom-6 right-6 z-50 p-5 rounded-full shadow-2xl bg-primary text-white animate-pulse-red lg:hidden flex items-center justify-center transition-opacity duration-300 ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         href="tel:3604876564"
       >
-        <span className="material-icons">call</span>
+        <span className="material-icons text-2xl">call</span>
       </a>
-      <button
-        className="fixed bottom-6 left-6 z-50 bg-slate-100 dark:bg-slate-800 p-3 rounded-full shadow-lg border border-slate-200 dark:border-slate-700"
-        onClick={toggleDarkMode}
-      >
-        <span className="material-icons dark:hidden text-slate-600">
-          dark_mode
-        </span>
-        <span className="material-icons hidden dark:block text-yellow-400">
-          light_mode
-        </span>
-      </button>
+
+      {/* Video Modal */}
+      <AnimatePresence>
+        {isVideoModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-12"
+          >
+            <button 
+              onClick={() => setIsVideoModalOpen(false)}
+              className="absolute top-6 right-6 text-white hover:text-primary transition-colors z-[110]"
+            >
+              <span className="material-icons text-4xl">close</span>
+            </button>
+            <div className="w-full max-w-6xl aspect-video relative rounded-2xl overflow-hidden shadow-2xl">
+              <iframe
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+                frameBorder="0"
+                src="https://www.youtube.com/embed/UMoBLZbB0-o?autoplay=1"
+                title="Groovin Movin Video"
+              ></iframe>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
