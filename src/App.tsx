@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import GroovinMovinLogo from "./assets/GroovinMovinLogo.png";
+import boxes from "./assets/boxes.png";
+import cleaning from "./assets/cleaning.png";
+import family from "./assets/family.png";
+import piano from "./assets/piano.png";
 
 const cities = [
   "Vancouver",
@@ -34,7 +39,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div className="flex items-center gap-2">
-              <img src="/GroovinMovinLogo.png" alt="Groovin Movin Logo" className="h-20 w-auto" />
+              <img src={GroovinMovinLogo} alt="Groovin Movin Logo" className="h-20 w-auto" />
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a
@@ -517,22 +522,22 @@ function App() {
             <img
               alt="Moving Truck"
               className="rounded-2xl h-64 w-full object-cover hover:scale-105 transition-transform duration-500"
-              src="/family.png"
+              src={family}
             />
             <img
               alt="Boxes"
               className="rounded-2xl h-64 w-full object-cover hover:scale-105 transition-transform duration-500"
-              src="/boxes.png"
+              src={boxes}
             />
             <img
               alt="Team Work"
               className="rounded-2xl h-64 w-full object-cover object-top hover:scale-105 transition-transform duration-500"
-              src="/piano.png"
+              src={piano}
             />
             <img
               alt="Cleaning"
               className="rounded-2xl h-64 w-full object-cover hover:scale-105 transition-transform duration-500"
-              src="/cleaning.png"
+              src={cleaning}
             />
           </div>
         </div>
@@ -740,7 +745,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-12 mb-12 border-b border-slate-800 pb-12">
             <div className="col-span-1 md:col-span-2">
-              <img src="/GroovinMovinLogo.png" alt="Groovin Movin Logo" className="h-8 w-auto mb-6" />
+              <img src={GroovinMovinLogo} alt="Groovin Movin Logo" className="h-8 w-auto mb-6" />
               <p className="max-w-sm mb-6">
                 Your trusted local movers in Vancouver, WA and surrounding areas. Making every move
                 smooth and stress-free with our 3-in-1 service approach.
