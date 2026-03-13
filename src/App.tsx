@@ -20,7 +20,48 @@ function App() {
   const [cityIndex, setCityIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+    const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    service: "Moving + Cleaning + Junk Removal",
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Google Form entry mapping
+    const data = {
+      "entry.2005620554": formData.name,
+      "entry.1166974658": formData.phone,
+      "entry.1966096732": formData.email,
+      "entry.1154711709": formData.service,
+      "entry.839337168": formData.message
+    };
+
+    try {
+      const response = await fetch("/api/submit-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data })
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        alert("Something went wrong. Please try calling us!");
+      }
+    } catch (err) {
+      alert("Something went wrong. Please try calling us!");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -210,69 +251,103 @@ function App() {
             <div id="quote-form" className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
               <h3 className="font-display text-2xl font-bold mb-6 text-slate-900 dark:text-white">
-                Get a Free Instant Quote
+                {submitted ? "Quote Request Sent!" : "Get a Free Instant Quote"}
               </h3>
-              <form className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              
+              {submitted ? (
+                <div className="space-y-6 text-center py-8">
+                  <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="material-icons text-5xl">check_circle</span>
+                  </div>
+                  <p className="text-lg text-slate-600 dark:text-slate-400">
+                    Thank you, <strong>{formData.name}</strong>! We've received your request and will call you shortly at <strong>{formData.phone}</strong>.
+                  </p>
+                  <button 
+                    onClick={() => setSubmitted(false)}
+                    className="text-primary font-bold hover:underline"
+                  >
+                    Send another request
+                  </button>
+                </div>
+              ) : (
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Full Name
+                      </label>
+                      <input
+                        required
+                        className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
+                        placeholder="John Doe"
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        required
+                        className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
+                        placeholder="(555) 000-0000"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      />
+                    </div>
+                  </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                      Full Name
+                      Email (Optional)
                     </label>
                     <input
                       className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
-                      placeholder="John Doe"
-                      type="text"
+                      placeholder="john@example.com"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                      Phone Number
+                      Service Required
                     </label>
-                    <input
+                    <select 
                       className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
-                      placeholder="(555) 000-0000"
-                      type="tel"
-                    />
+                      value={formData.service}
+                      onChange={(e) => setFormData({...formData, service: e.target.value})}
+                    >
+                      <option>Moving + Cleaning + Junk Removal</option>
+                      <option>Moving Only</option>
+                      <option>Cleaning Only</option>
+                      <option>Junk Removal Only</option>
+                    </select>
                   </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Email (Optional)
-                  </label>
-                  <input
-                    className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
-                    placeholder="john@example.com"
-                    type="email"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Service Required
-                  </label>
-                  <select className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all">
-                    <option>Moving + Cleaning + Junk Removal</option>
-                    <option>Moving Only</option>
-                    <option>Cleaning Only</option>
-                    <option>Junk Removal Only</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Tell us about your needs
-                  </label>
-                  <textarea
-                    className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
-                    placeholder="What are you moving? Where to?"
-                    rows={3}
-                  ></textarea>
-                </div>
-                <button
-                  className="w-full text-white py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-black transition-all shadow-xl transform hover:-translate-y-0.5 bg-black shadow-black/30 border-transparent"
-                  type="submit"
-                >
-                  Get Free Quote Now
-                </button>
-              </form>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Tell us about your needs
+                    </label>
+                    <textarea
+                      required
+                      className="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-primary focus:border-primary transition-all"
+                      placeholder="What are you moving? Where to?"
+                      rows={3}
+                      value={formData.message}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    ></textarea>
+                  </div>
+                  <button
+                    disabled={isSubmitting}
+                    className="w-full text-white py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-black transition-all shadow-xl transform hover:-translate-y-0.5 bg-black shadow-black/30 border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                    type="submit"
+                  >
+                    {isSubmitting ? "Sending..." : "Get Free Quote Now"}
+                  </button>
+                </form>
+              )}
               <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
                 Or call us directly at{" "}
                 <a
