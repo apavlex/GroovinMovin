@@ -11,6 +11,8 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
+// Also serve from '/GroovinMovin' to handle cases where build artifacts use the old base path
+app.use('/GroovinMovin', express.static(path.join(__dirname, 'dist')));
 
 app.post('/api/submit-quote', async (req, res) => {
   const { data } = req.body;
