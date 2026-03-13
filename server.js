@@ -9,10 +9,25 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(express.json());
-// Serve static files from the 'dist' directory
-app.use(express.static(path.join(__dirname, 'dist')));
+// Serve static files from the 'dist' directory with cache control
+app.use(express.static(path.join(__dirname, 'dist'), {
+  maxAge: '1y',
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
+
 // Also serve from '/GroovinMovin' to handle cases where build artifacts use the old base path
-app.use('/GroovinMovin', express.static(path.join(__dirname, 'dist')));
+app.use('/GroovinMovin', express.static(path.join(__dirname, 'dist'), {
+  maxAge: '1y',
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 app.post('/api/submit-quote', async (req, res) => {
   const { data } = req.body;
@@ -41,8 +56,12 @@ app.post('/api/submit-quote', async (req, res) => {
   }
 });
 
-// Handle all other routes by serving 'index.html'
+// Handle SPA routing - return index.html EXCEPT for requests that look like assets
 app.get('*', (req, res) => {
+  // If the request has an extension (like .js, .css, .png), it's a missing asset
+  if (req.path.includes('.')) {
+    return res.status(404).send('Asset Not Found');
+  }
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 

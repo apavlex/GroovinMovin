@@ -76,10 +76,6 @@ function App() {
 
   return (
     <>
-      {/* DEBUG BANNER - FOR VISIBILITY TESTING */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '40px', background: '#C62828', color: 'white', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px', pointerEvents: 'none' }}>
-        SITE RENDERED SUCCESSFULLY - CALL (360) 487-6564
-      </div>
       <nav className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 lg:h-20 items-center">
