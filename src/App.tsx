@@ -259,9 +259,19 @@ function App() {
                   <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="material-icons text-5xl">check_circle</span>
                   </div>
-                  <p className="text-lg text-slate-600 dark:text-slate-400">
-                    Thank you, <strong>{formData.name}</strong>! We've received your request and will call you shortly at <strong>{formData.phone}</strong>.
-                  </p>
+                  <div className="space-y-4">
+                    <p className="text-lg text-slate-600 dark:text-slate-400">
+                      Thank you, <strong>{formData.name}</strong>! We've received your request and will call you shortly at <strong>{formData.phone}</strong>.
+                    </p>
+                    <div className="bg-primary/5 p-4 rounded-xl border border-primary/10">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-widest">Need an answer right now?</p>
+                      <a href="tel:3604876564" className="flex items-center justify-center gap-2 text-2xl font-black text-primary hover:scale-105 transition-transform">
+                        <span className="material-icons">call</span>
+                        (360) 487-6564
+                      </a>
+                      <p className="text-xs text-slate-500 mt-2">Call us for an instant response!</p>
+                    </div>
+                  </div>
                   <button 
                     onClick={() => setSubmitted(false)}
                     className="text-primary font-bold hover:underline"
