@@ -15,6 +15,10 @@ const cities = [
   "Camas",
   "Battle Ground",
 ];
+/** Same endpoint as in server.js — used for static hosting (no /api proxy). */
+const GOOGLE_FORM_ACTION =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdXs1pSqaHgDNDhByaLXHQV-yVRxYRjD6A1x0jFqk7-potGgQ/formResponse";
+const GOOGLE_FORM_TARGET = "google-forms-submit-frame";
 
 function App() {
   const [cityIndex, setCityIndex] = useState(0);
@@ -31,32 +35,38 @@ function App() {
     message: ""
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Google Form entry mapping
-    const data = {
+
+    const fields: Record<string, string> = {
       "entry.2005620554": formData.name,
       "entry.1166974658": formData.phone,
       "entry.1966096732": formData.email,
       "entry.1154711709": formData.service,
-      "entry.839337168": formData.message
+      "entry.839337168": formData.message,
     };
 
     try {
-      const response = await fetch("/api/submit-quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data })
-      });
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = GOOGLE_FORM_ACTION;
+      form.target = GOOGLE_FORM_TARGET;
+      form.style.display = "none";
 
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        alert("Something went wrong. Please try calling us!");
+      for (const [name, value] of Object.entries(fields)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
       }
-    } catch (err) {
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+      setSubmitted(true);
+    } catch {
       alert("Something went wrong. Please try calling us!");
     } finally {
       setIsSubmitting(false);
@@ -74,8 +84,14 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  return (
+    return (
     <>
+      <iframe
+        title="Google Forms response"
+        name={GOOGLE_FORM_TARGET}
+        className="absolute w-0 h-0 border-0"
+        aria-hidden
+      />
       <nav className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 lg:h-20 items-center">
